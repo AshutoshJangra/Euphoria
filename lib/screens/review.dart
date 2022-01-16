@@ -1,0 +1,123 @@
+import 'package:euphoria/configuration.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+
+class Review extends StatefulWidget {
+  final String mid;
+  const Review({Key? key, required this.mid}) : super(key: key);
+
+  @override
+  State<Review> createState() => _ReviewState();
+}
+
+class _ReviewState extends State<Review> {
+  final rcontroller = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser!;
+
+  @override
+  void dispose() {
+    rcontroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Movie Name'),
+        backgroundColor: bgPrimeDark,
+        elevation: 0,
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('movies')
+                      .doc(widget.mid)
+                      .collection('reviews')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      snapshot.data!.docs[i]['photo']),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        snapshot.data!.docs[i]['name'],
+                                        style: TextStyle(
+                                            color: textPrimeDark, fontSize: 11),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 0, vertical: 5),
+                                        decoration: BoxDecoration(
+                                            color: Colors.pink[100],
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 15),
+                                        child: Text(
+                                          snapshot.data!.docs[i]['text'],
+                                          style: TextStyle(color: bgPrimeDark),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                  }),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      fillColor: textPrimeDark.withOpacity(0.4),
+                      filled: true,
+                      focusColor: textPrimeDark,
+                    ),
+                    controller: rcontroller,
+                  ),
+                ),
+                TextButton(
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
+                          .collection('movies')
+                          .doc(widget.mid)
+                          .collection("reviews")
+                          .add({
+                        "name": user.displayName,
+                        "text": rcontroller.text,
+                        "photo": user.photoURL.toString()
+                      });
+                      rcontroller.text = "";
+                    },
+                    child: Text('send')),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
