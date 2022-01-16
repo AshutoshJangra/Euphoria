@@ -6,6 +6,11 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
+## Download Apk
+
+- [CLICK HERE TO TRY TEHE APP](https://drive.google.com/file/d/1LgF2xein6FQiD7n3zvAjqCRlWJ2hkwwQ/view)
+
+
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
