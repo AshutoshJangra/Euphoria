@@ -48,7 +48,7 @@ class Movie extends StatelessWidget {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
-                      // print(snapshot.data!.docs[1].id);
+                      // print(snapshot.data!.docs[1].data());
                       return Container(
                         child: InkWell(
                             onTap: () => {
@@ -56,7 +56,9 @@ class Movie extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => Review(
-                                          mid: snapshot.data!.docs[index].id),
+                                          mid: snapshot.data!.docs[index].id,
+                                          dt: snapshot.data!.docs[index]
+                                              .data()),
                                     ),
                                   ),
                                 },

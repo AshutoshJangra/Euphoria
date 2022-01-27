@@ -2,6 +2,8 @@ import 'package:euphoria/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import './edit.dart';
+
 class Thread extends StatefulWidget {
   final dynamic root;
   const Thread({Key? key, required this.root}) : super(key: key);
@@ -15,6 +17,7 @@ class _ThreadState extends State<Thread> {
   String pb = "";
   String bo = "";
   String bt = "";
+  String id = "";
 
   @override
   void initState() {
@@ -32,11 +35,12 @@ class _ThreadState extends State<Thread> {
         .get()
         .then((QuerySnapshot q) => (q.docs.forEach((element) {
               dynamic a = element.data();
+
               setState(() {
                 t_list.add(a['text']);
                 bo = a['bo'];
                 bt = a['bt'];
-                print(a['text']);
+                id = element.id;
               });
             })));
   }
@@ -47,6 +51,33 @@ class _ThreadState extends State<Thread> {
       appBar: AppBar(
         backgroundColor: bgPrimeDark,
         title: Text(widget.root['data']['name']),
+        actions: bo.length <= 0
+            ? [
+                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: TextButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Edit(p: pb, i: id, tid: widget.root['tid'])));
+                    },
+                    icon: Icon(
+                      Icons.edit_attributes_rounded,
+                      color: Colors.pink[400],
+                    ),
+                    label: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(color: Colors.pink[400]),
+                      ),
+                    ),
+                  ),
+                )
+              ]
+            : null,
         elevation: 0,
       ),
       body: Column(
@@ -63,19 +94,28 @@ class _ThreadState extends State<Thread> {
               itemCount: t_list.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                    margin: EdgeInsets.all(20),
+                    margin: EdgeInsets.symmetric(horizontal: 36, vertical: 10),
                     width: double.infinity,
                     child: Text(
                       t_list[index]!,
-                      style: TextStyle(color: textPrimeDark),
+                      style: TextStyle(
+                        color: textPrimeDark,
+                        fontSize: 15,
+                      ),
                     ));
               }),
           TextButton(
               onPressed: () {
-                getThread(bo);
+                pb = bo;
+                getThread(pb);
               },
               child: Text(bo)),
-          TextButton(onPressed: () => print(bt), child: Text(bt))
+          TextButton(
+              onPressed: () {
+                pb = bt;
+                getThread(pb);
+              },
+              child: Text(bt))
         ],
       ),
     );

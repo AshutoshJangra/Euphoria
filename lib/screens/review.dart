@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 
 class Review extends StatefulWidget {
   final String mid;
-  const Review({Key? key, required this.mid}) : super(key: key);
+  final dynamic dt;
+  const Review({Key? key, required this.mid, required this.dt})
+      : super(key: key);
 
   @override
   State<Review> createState() => _ReviewState();
@@ -26,7 +28,7 @@ class _ReviewState extends State<Review> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Movie Name'),
+        title: Text(widget.dt["name"]),
         backgroundColor: bgPrimeDark,
         elevation: 0,
       ),
@@ -45,37 +47,40 @@ class _ReviewState extends State<Review> {
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, i) {
                           return Container(
-                            padding: EdgeInsets.only(left: 10),
+                            padding: EdgeInsets.only(left: 20),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 CircleAvatar(
                                   backgroundImage: NetworkImage(
                                       snapshot.data!.docs[i]['photo']),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(20.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 20),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        snapshot.data!.docs[i]['name'],
-                                        style: TextStyle(
-                                            color: textPrimeDark, fontSize: 11),
-                                      ),
                                       Container(
-                                        margin: EdgeInsets.symmetric(
+                                        margin: const EdgeInsets.symmetric(
                                             horizontal: 0, vertical: 5),
                                         decoration: BoxDecoration(
-                                            color: Colors.pink[100],
+                                            color: Colors.white12,
                                             borderRadius:
                                                 BorderRadius.circular(8)),
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 15),
-                                        child: Text(
-                                          snapshot.data!.docs[i]['text'],
-                                          style: TextStyle(color: bgPrimeDark),
+                                        child: Container(
+                                          width: 200,
+                                          child: Text(
+                                            snapshot.data!.docs[i]['text'],
+                                            style: TextStyle(
+                                                color: textPrimeDark,
+                                                fontSize: 16),
+                                            softWrap: true,
+                                          ),
                                         ),
                                       )
                                     ],
@@ -91,10 +96,21 @@ class _ReviewState extends State<Review> {
               children: [
                 Expanded(
                   child: TextFormField(
+                    style: TextStyle(color: textPrimeDark),
                     decoration: InputDecoration(
-                      fillColor: textPrimeDark.withOpacity(0.4),
+                      fillColor: textPrimeDark.withOpacity(0.3),
                       filled: true,
                       focusColor: textPrimeDark,
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100),
+                          ),
+                          borderSide: BorderSide(width: 0)),
+                      focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100),
+                          ),
+                          borderSide: BorderSide(width: 0)),
                     ),
                     controller: rcontroller,
                   ),
@@ -112,7 +128,7 @@ class _ReviewState extends State<Review> {
                       });
                       rcontroller.text = "";
                     },
-                    child: Text('send')),
+                    child: Text('Send')),
               ],
             )
           ],

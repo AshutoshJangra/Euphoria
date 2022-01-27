@@ -21,16 +21,21 @@ class Upload extends StatelessWidget {
         FirebaseFirestore.instance.collection('threads');
 
     Future<void> addThread() {
-      return threads
-          .add({
-            'img': icontroller.text,
-            'name': tcontroller.text,
-            'root': pcontroller.text,
-            'text': scontroller.text,
-            'genre': gcontroller.text,
-          })
-          .then((value) => print('thread added'))
-          .catchError((err) => print(err));
+      return threads.add({
+        'img': icontroller.text,
+        'name': tcontroller.text,
+        'root': pcontroller.text,
+        'text': scontroller.text,
+        'genre': gcontroller.text,
+      }).then((value) {
+        final snackBar = SnackBar(content: Text('New Story Added'));
+        icontroller.text = "";
+        tcontroller.text = "";
+        pcontroller.text = "";
+        scontroller.text = "";
+        gcontroller.text = "";
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }).catchError((err) => print(err));
     }
 
     return Scaffold(
