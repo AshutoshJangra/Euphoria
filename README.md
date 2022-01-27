@@ -7,6 +7,6 @@
 
 ## Download Apk
 
-- [CLICK HERE TO TRY THE APP](https://drive.google.com/file/d/1LgF2xein6FQiD7n3zvAjqCRlWJ2hkwwQ/view)
+- [CLICK HERE TO TRY THE APP](https://drive.google.com/file/d/1LgF2xein6FQiD7n3zvAjqCRlWJ2hkwwQ/view?usp=sharing)
 
 
